@@ -1,8 +1,170 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model OrdemServicoMvc.Models.ViewModels.ClientesIndexViewModel
+
+@{
+    ViewData["Title"] = "Clientes";
+
+    string ProximaDirecao(string coluna)
+    {
+        if (Model.OrdenarPor == coluna && Model.Direcao == "asc")
+            return "desc";
+
+        return "asc";
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Clientes</h2>
+            <p class="text-muted mb-0">Lista de clientes cadastrados</p>
+        </div>
+
+        <a asp-action="Create" class="btn btn-primary">Novo Cliente</a>
+    </div>
+
+    <form asp-action="Index" method="get" class="row g-2 mb-3">
+        <div class="col-md-8">
+            <input type="text"
+                   name="termoBusca"
+                   value="@Model.TermoBusca"
+                   class="form-control"
+                   placeholder="Buscar por nome, telefone ou email..." />
+        </div>
+
+        <div class="col-md-2">
+            <select name="tamanhoPagina" class="form-select">
+                <option value="5" selected="@(Model.TamanhoPagina == 5)">5</option>
+                <option value="10" selected="@(Model.TamanhoPagina == 10)">10</option>
+                <option value="20" selected="@(Model.TamanhoPagina == 20)">20</option>
+                <option value="50" selected="@(Model.TamanhoPagina == 50)">50</option>
+            </select>
+        </div>
+
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-secondary w-100">Buscar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Limpar</a>
+        </div>
+    </form>
+
+    @if (!Model.Clientes.Any())
+    {
+        <div class="alert alert-info">
+            Nenhum cliente encontrado.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                <a class="text-white text-decoration-none"
+                                   asp-action="Index"
+                                   asp-route-termoBusca="@Model.TermoBusca"
+                                   asp-route-ordenarPor="id"
+                                   asp-route-direcao="@ProximaDirecao("id")"
+                                   asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                                    ID
+                                </a>
+                            </th>
+
+                            <th>
+                                <a class="text-white text-decoration-none"
+                                   asp-action="Index"
+                                   asp-route-termoBusca="@Model.TermoBusca"
+                                   asp-route-ordenarPor="nome"
+                                   asp-route-direcao="@ProximaDirecao("nome")"
+                                   asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                                    Nome
+                                </a>
+                            </th>
+
+                            <th>
+                                <a class="text-white text-decoration-none"
+                                   asp-action="Index"
+                                   asp-route-termoBusca="@Model.TermoBusca"
+                                   asp-route-ordenarPor="telefone"
+                                   asp-route-direcao="@ProximaDirecao("telefone")"
+                                   asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                                    Telefone
+                                </a>
+                            </th>
+
+                            <th>
+                                <a class="text-white text-decoration-none"
+                                   asp-action="Index"
+                                   asp-route-termoBusca="@Model.TermoBusca"
+                                   asp-route-ordenarPor="email"
+                                   asp-route-direcao="@ProximaDirecao("email")"
+                                   asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                                    Email
+                                </a>
+                            </th>
+
+                            <th class="text-center" style="width: 260px;">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var cliente in Model.Clientes)
+                        {
+                            <tr>
+                                <td>@cliente.Id</td>
+                                <td>@cliente.Nome</td>
+                                <td>@(string.IsNullOrWhiteSpace(cliente.Telefone) ? "-" : cliente.Telefone)</td>
+                                <td>@(string.IsNullOrWhiteSpace(cliente.Email) ? "-" : cliente.Email)</td>
+                                <td class="text-center">
+                                    <a asp-action="Details" asp-route-id="@cliente.Id" class="btn btn-sm btn-info">Detalhes</a>
+                                    <a asp-action="Edit" asp-route-id="@cliente.Id" class="btn btn-sm btn-warning">Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@cliente.Id" class="btn btn-sm btn-danger">Excluir</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="text-muted">
+                Total: @Model.TotalRegistros registro(s)
+            </span>
+
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item @(Model.TemPaginaAnterior ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-termoBusca="@Model.TermoBusca"
+                           asp-route-ordenarPor="@Model.OrdenarPor"
+                           asp-route-direcao="@Model.Direcao"
+                           asp-route-pagina="@(Model.PaginaAtual - 1)"
+                           asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                            Anterior
+                        </a>
+                    </li>
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            @Model.PaginaAtual / @Model.TotalPaginas
+                        </span>
+                    </li>
+
+                    <li class="page-item @(Model.TemProximaPagina ? "" : "disabled")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-termoBusca="@Model.TermoBusca"
+                           asp-route-ordenarPor="@Model.OrdenarPor"
+                           asp-route-direcao="@Model.Direcao"
+                           asp-route-pagina="@(Model.PaginaAtual + 1)"
+                           asp-route-tamanhoPagina="@Model.TamanhoPagina">
+                            Próxima
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
 </div>

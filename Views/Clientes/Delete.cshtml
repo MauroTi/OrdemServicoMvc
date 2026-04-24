@@ -1,0 +1,23 @@
+﻿@model OrdemServicoMvc.Models.DTOs.ClienteDto
+
+@{
+    ViewData["Title"] = "Excluir Cliente";
+}
+
+<div class="container mt-4">
+    <h2>Excluir Cliente</h2>
+
+    <div class="alert alert-danger mt-3">
+        Tem certeza que deseja excluir este cliente?
+    </div>
+
+    <p><strong>@Model.Nome</strong></p>
+
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <button class="btn btn-danger">Excluir</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

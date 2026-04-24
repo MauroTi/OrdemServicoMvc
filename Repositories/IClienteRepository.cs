@@ -9,5 +9,13 @@ namespace OrdemServicoMvc.Repositories
         Task<int> AdicionarAsync(Cliente cliente);
         Task AtualizarAsync(Cliente cliente);
         Task RemoverAsync(int id);
+        Task<IEnumerable<Cliente>> ObterPaginadoAsync(
+    string? termoBusca,
+    string ordenarPor,
+    string direcao,
+    int pagina,
+    int tamanhoPagina);
+
+        Task<int> ContarAsync(string? termoBusca);
     }
 }

@@ -1,10 +1,19 @@
 using OrdemServicoMvc.Data;
+using OrdemServicoMvc.Filters;
 using OrdemServicoMvc.Repositories;
 using OrdemServicoMvc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews(
+        options =>
+        {
+            options.Filters.Add<GlobalExceptionFilter>();
+        });
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<DbConnectionFactory>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
@@ -18,13 +27,26 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseSwaggerUI(
+    c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "OrdemServico API v1");
+        c.RoutePrefix = "swagger";
+    });
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllers();
+
+app.MapControllerRoute(name: "default", pattern: "{controller=Clientes}/{action=Index}/{id?}");
 
 app.Run();

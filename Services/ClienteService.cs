@@ -71,5 +71,36 @@ namespace OrdemServicoMvc.Services
         {
             await _repository.RemoverAsync(id);
         }
+
+        public async Task<IEnumerable<ClienteDto>> ObterPaginadoAsync(
+    string? termoBusca,
+    string ordenarPor,
+    string direcao,
+    int pagina,
+    int tamanhoPagina)
+        {
+            pagina = pagina < 1 ? 1 : pagina;
+            tamanhoPagina = tamanhoPagina < 1 ? 10 : tamanhoPagina;
+
+            var clientes = await _repository.ObterPaginadoAsync(
+                termoBusca,
+                ordenarPor,
+                direcao,
+                pagina,
+                tamanhoPagina);
+
+            return clientes.Select(c => new ClienteDto
+            {
+                Id = c.Id,
+                Nome = c.Nome,
+                Telefone = c.Telefone,
+                Email = c.Email
+            });
+        }
+
+        public async Task<int> ContarAsync(string? termoBusca)
+        {
+            return await _repository.ContarAsync(termoBusca);
+        }
     }
 }
