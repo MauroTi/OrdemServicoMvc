@@ -15,12 +15,15 @@ namespace OrdemServicoMvc.Controllers
         }
 
         public async Task<IActionResult> Index(
-    string? termoBusca,
-    string ordenarPor = "nome",
-    string direcao = "asc",
-    int pagina = 1,
-    int tamanhoPagina = 10)
+            string? termoBusca,
+            string ordenarPor = "nome",
+            string direcao = "asc",
+            int pagina = 1,
+            int tamanhoPagina = 10)
         {
+            pagina = pagina < 1 ? 1 : pagina;
+            tamanhoPagina = tamanhoPagina < 1 ? 10 : tamanhoPagina;
+
             var clientes = await _clienteService.ObterPaginadoAsync(
                 termoBusca,
                 ordenarPor,
@@ -98,7 +101,10 @@ namespace OrdemServicoMvc.Controllers
             if (!ModelState.IsValid)
                 return View(dto);
 
-            await _clienteService.AtualizarAsync(dto);
+            var atualizado = await _clienteService.AtualizarAsync(dto);
+
+            if (!atualizado)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }
@@ -117,7 +123,10 @@ namespace OrdemServicoMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _clienteService.RemoverAsync(id);
+            var removido = await _clienteService.RemoverAsync(id);
+
+            if (!removido)
+                return NotFound();
 
             return RedirectToAction(nameof(Index));
         }

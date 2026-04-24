@@ -80,7 +80,7 @@ namespace OrdemServicoMvc.Repositories
             return id;
         }
 
-        public async Task AtualizarAsync(Cliente cliente)
+        public async Task<bool> AtualizarAsync(Cliente cliente)
         {
             const string sql = @"
                 UPDATE clientes
@@ -93,15 +93,18 @@ namespace OrdemServicoMvc.Repositories
 
             var start = DateTime.UtcNow;
 
-            await connection.ExecuteAsync(sql, cliente);
+            var linhasAfetadas = await connection.ExecuteAsync(sql, cliente);
 
             _logger.LogInformation(
-                "Query AtualizarAsync executada em {ms} ms | Id: {id}",
+                "Query AtualizarAsync executada em {ms} ms | Id: {id} | Linhas afetadas: {linhasAfetadas}",
                 (DateTime.UtcNow - start).TotalMilliseconds,
-                cliente.Id);
+                cliente.Id,
+                linhasAfetadas);
+
+            return linhasAfetadas > 0;
         }
 
-        public async Task RemoverAsync(int id)
+        public async Task<bool> RemoverAsync(int id)
         {
             const string sql = @"
                 DELETE FROM clientes
@@ -111,12 +114,15 @@ namespace OrdemServicoMvc.Repositories
 
             var start = DateTime.UtcNow;
 
-            await connection.ExecuteAsync(sql, new { Id = id });
+            var linhasAfetadas = await connection.ExecuteAsync(sql, new { Id = id });
 
             _logger.LogInformation(
-                "Query RemoverAsync executada em {ms} ms | Id: {id}",
+                "Query RemoverAsync executada em {ms} ms | Id: {id} | Linhas afetadas: {linhasAfetadas}",
                 (DateTime.UtcNow - start).TotalMilliseconds,
-                id);
+                id,
+                linhasAfetadas);
+
+            return linhasAfetadas > 0;
         }
 
         public async Task<IEnumerable<Cliente>> ObterPaginadoAsync(

@@ -61,12 +61,10 @@ namespace OrdemServicoMvc.Controllers.Api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var clienteExistente = await _clienteService.ObterPorIdAsync(id);
+            var atualizado = await _clienteService.AtualizarAsync(dto);
 
-            if (clienteExistente == null)
+            if (!atualizado)
                 return NotFound(new { mensagem = "Cliente não encontrado." });
-
-            await _clienteService.AtualizarAsync(dto);
 
             return NoContent();
         }
@@ -75,12 +73,10 @@ namespace OrdemServicoMvc.Controllers.Api
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Remover(int id)
         {
-            var clienteExistente = await _clienteService.ObterPorIdAsync(id);
+            var removido = await _clienteService.RemoverAsync(id);
 
-            if (clienteExistente == null)
+            if (!removido)
                 return NotFound(new { mensagem = "Cliente não encontrado." });
-
-            await _clienteService.RemoverAsync(id);
 
             return NoContent();
         }

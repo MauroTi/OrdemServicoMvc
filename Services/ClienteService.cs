@@ -54,7 +54,7 @@ namespace OrdemServicoMvc.Services
             return await _repository.AdicionarAsync(cliente);
         }
 
-        public async Task AtualizarAsync(EditarClienteDto dto)
+        public async Task<bool> AtualizarAsync(EditarClienteDto dto)
         {
             var cliente = new Cliente
             {
@@ -64,20 +64,20 @@ namespace OrdemServicoMvc.Services
                 Email = dto.Email
             };
 
-            await _repository.AtualizarAsync(cliente);
+            return await _repository.AtualizarAsync(cliente);
         }
 
-        public async Task RemoverAsync(int id)
+        public async Task<bool> RemoverAsync(int id)
         {
-            await _repository.RemoverAsync(id);
+            return await _repository.RemoverAsync(id);
         }
 
         public async Task<IEnumerable<ClienteDto>> ObterPaginadoAsync(
-    string? termoBusca,
-    string ordenarPor,
-    string direcao,
-    int pagina,
-    int tamanhoPagina)
+            string? termoBusca,
+            string ordenarPor,
+            string direcao,
+            int pagina,
+            int tamanhoPagina)
         {
             pagina = pagina < 1 ? 1 : pagina;
             tamanhoPagina = tamanhoPagina < 1 ? 10 : tamanhoPagina;

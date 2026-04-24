@@ -10,9 +10,9 @@ namespace OrdemServicoMvc.Services
 
         Task<int> AdicionarAsync(CriarClienteDto dto);
 
-        Task AtualizarAsync(EditarClienteDto dto);
+        Task<bool> AtualizarAsync(EditarClienteDto dto);
 
-        Task RemoverAsync(int id);
+        Task<bool> RemoverAsync(int id);
 
         Task<IEnumerable<ClienteDto>> ObterPaginadoAsync(
             string? termoBusca,
