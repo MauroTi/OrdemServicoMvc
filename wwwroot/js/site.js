@@ -1,4 +1,10 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+"use strict";
+document.addEventListener("DOMContentLoaded", () => {
+    const currentPage = document.body.dataset.page;
+    if (currentPage === "clientes-index") {
+        const searchInput = document.querySelector("input[name='termoBusca']");
+        searchInput?.addEventListener("focus", () => {
+            searchInput.select();
+        });
+    }
+});

@@ -1,14 +1,32 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<h1 class="text-danger">@Model.Title</h1>
+<h2 class="text-danger">@Model.Message</h2>
+
+@if (!string.IsNullOrWhiteSpace(Model.Detail))
+{
+    <div class="alert alert-warning mt-3">
+        @Model.Detail
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.PowerShellCommand))
+{
+    <div class="card mt-3">
+        <div class="card-body">
+            <h3 class="h5">Como iniciar o banco pelo PowerShell</h3>
+            <p class="mb-2">Abra um PowerShell como Administrador e execute:</p>
+            <pre class="mb-0"><code>@Model.PowerShellCommand</code></pre>
+        </div>
+    </div>
+}
 
 @if (Model.ShowRequestId)
 {
-    <p>
+    <p class="mt-3">
         <strong>Request ID:</strong> <code>@Model.RequestId</code>
     </p>
 }
@@ -20,6 +38,6 @@
 <p>
     <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
     It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
+    For local debugging, enable the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable with the value <strong>Development</strong>
+    and restart the app.
 </p>

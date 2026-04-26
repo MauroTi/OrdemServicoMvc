@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "none",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "rootDir": "wwwroot/ts",
+    "outDir": "wwwroot/js"
+  },
+  "include": [
+    "wwwroot/ts/**/*.ts"
+  ]
+}

@@ -15,11 +15,20 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<DatabaseServiceStartupOptions>(
+    builder.Configuration.GetSection("DatabaseServiceStartup"));
 builder.Services.AddScoped<DbConnectionFactory>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddSingleton<DatabaseWindowsServiceStarter>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var databaseStarter = scope.ServiceProvider.GetRequiredService<DatabaseWindowsServiceStarter>();
+    await databaseStarter.EnsureStartedAsync();
+}
 
 if (!app.Environment.IsDevelopment())
 {

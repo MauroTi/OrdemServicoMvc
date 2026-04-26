@@ -22,5 +22,7 @@ namespace OrdemServicoMvc.Services
             int tamanhoPagina);
 
         Task<int> ContarAsync(string? termoBusca);
+
+        Task<ClientesDashboardDto> ObterResumoDashboardAsync();
     }
 }

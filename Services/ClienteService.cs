@@ -102,5 +102,62 @@ namespace OrdemServicoMvc.Services
         {
             return await _repository.ContarAsync(termoBusca);
         }
+
+        public async Task<ClientesDashboardDto> ObterResumoDashboardAsync()
+        {
+            var clientes = (await _repository.ObterTodosAsync()).ToList();
+
+            var cadastroCompleto = clientes.Count(cliente =>
+                !string.IsNullOrWhiteSpace(cliente.Email) &&
+                !string.IsNullOrWhiteSpace(cliente.Telefone));
+
+            var somenteEmail = clientes.Count(cliente =>
+                !string.IsNullOrWhiteSpace(cliente.Email) &&
+                string.IsNullOrWhiteSpace(cliente.Telefone));
+
+            var somenteTelefone = clientes.Count(cliente =>
+                string.IsNullOrWhiteSpace(cliente.Email) &&
+                !string.IsNullOrWhiteSpace(cliente.Telefone));
+
+            var semContato = clientes.Count(cliente =>
+                string.IsNullOrWhiteSpace(cliente.Email) &&
+                string.IsNullOrWhiteSpace(cliente.Telefone));
+
+            return new ClientesDashboardDto
+            {
+                TotalClientes = clientes.Count,
+                ComEmail = clientes.Count(cliente => !string.IsNullOrWhiteSpace(cliente.Email)),
+                ComTelefone = clientes.Count(cliente => !string.IsNullOrWhiteSpace(cliente.Telefone)),
+                CadastroCompleto = cadastroCompleto,
+                SemContato = semContato,
+                DistribuicaoContato =
+                [
+                    new DashboardFatiaDto
+                    {
+                        Rotulo = "Cadastro completo",
+                        Valor = cadastroCompleto,
+                        Cor = "#14532d"
+                    },
+                    new DashboardFatiaDto
+                    {
+                        Rotulo = "Somente e-mail",
+                        Valor = somenteEmail,
+                        Cor = "#0f766e"
+                    },
+                    new DashboardFatiaDto
+                    {
+                        Rotulo = "Somente telefone",
+                        Valor = somenteTelefone,
+                        Cor = "#ca8a04"
+                    },
+                    new DashboardFatiaDto
+                    {
+                        Rotulo = "Sem contato",
+                        Valor = semContato,
+                        Cor = "#b91c1c"
+                    }
+                ]
+            };
+        }
     }
 }

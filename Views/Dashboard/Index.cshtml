@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="dashboard-page">
+    <div class="dashboard-hero">
+        <div>
+            <span class="dashboard-kicker">Miniapp analitica</span>
+            <h1>Panorama de contatos dos clientes</h1>
+            <p>
+                Esta tela consome a API interna do projeto e transforma os dados em um grafico de pizza
+                para apoiar analise rapida da qualidade cadastral.
+            </p>
+        </div>
+
+        <div class="dashboard-actions">
+            <a asp-controller="Clientes" asp-action="Index" class="btn btn-outline-light">Voltar para clientes</a>
+            <a href="/swagger" class="btn btn-light">Ver API no Swagger</a>
+        </div>
+    </div>
+
+    <div id="clientes-dashboard-app"
+         class="dashboard-app"
+         data-endpoint="/api/dashboard/clientes">
+        <div class="dashboard-status-card">
+            Carregando indicadores...
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/dashboard/clientes-dashboard.js" asp-append-version="true"></script>
+}
